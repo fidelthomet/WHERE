@@ -1,2 +1,2 @@
 # WHERE?
-## Easily create APIs from static GeoJSON files
+Easily create APIs from static GeoJSON files
