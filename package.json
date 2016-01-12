@@ -1,0 +1,26 @@
+{
+  "name": "WHERE?",
+  "version": "0.1",
+  "description": "easily create APIs from static GeoJSON files",
+  "main": "where.js",
+  "scripts": {
+    "start": "node where.js"
+  },
+  "dependencies": {
+    "restify": "4.0.3"
+  },
+  "engines": {
+    "node": "0.12.7"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/fidelthomet/WHERE"
+  },
+  "keywords": [
+    "node",
+    "heroku",
+    "api",
+    "geojson"
+  ],
+  "license": "MIT"
+}
