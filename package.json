@@ -1,6 +1,6 @@
 {
-  "name": "WHERE?",
-  "version": "0.1",
+  "name": "WHERE",
+  "version": "0.1.0",
   "description": "easily create APIs from static GeoJSON files",
   "main": "where.js",
   "scripts": {
