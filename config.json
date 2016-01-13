@@ -1,3 +1,20 @@
 {
-	"port": 65432
+	"port": 65432,
+	"docs": true,
+	"options": {
+		"default": {
+
+			},
+		"max": {
+
+		},
+		"min": {
+
+		}
+	},
+	"files": {
+		"adressen": {
+			
+		}
+	}
 }
