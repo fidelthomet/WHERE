@@ -68,19 +68,19 @@ function initServer() {
 
 	// define routes
 	server.get('/q/:geojson', function(req, res) {
-		res.send(anwser(req.params.geojson))
+		res.send(respond(req.params.geojson))
 	})
 
 	server.get('/q/:geojson/:geometry', function(req, res) {
-		res.send(anwser(req.params.geojson, req.params.geometry))
+		res.send(respond(req.params.geojson, req.params.geometry))
 	})
 
 	server.get('/q/:geojson/:geometry/:props/', function(req, res) {
-		res.send(anwser(req.params.geojson, req.params.geometry, req.params.props))
+		res.send(respond(req.params.geojson, req.params.geometry, req.params.props))
 	})
 
 	server.get('/q/:geojson/:geometry/:props/:options', function(req, res) {
-		res.send(anwser(req.params.geojson, req.params.geometry, req.params.props, parseOptions(req.params.options)))
+		res.send(respond(req.params.geojson, req.params.geometry, req.params.props, parseOptions(req.params.options)))
 	})
 
 	// send documentation (assuming it's not disabled in config.json)
@@ -102,11 +102,11 @@ function initServer() {
 	})
 }
 
-function anwser(file, geometry, props, options) {
+function respond(file, geometry, props, opts) {
 	file = file == " " ? false : file
 	geometry = geometry == " " ? false : geometry
 	props = props == " " ? false : props
-	options = options == " " ? false : options
+	opts = opts == " " ? false : opts
 
 	if (!file || !config.files[file]) {
 		return {
@@ -115,7 +115,7 @@ function anwser(file, geometry, props, options) {
 		}
 	}
 
-	if (!geometry && !props && !options) {
+	if (!geometry && !props && !opts) {
 		return files[file]
 	}
 
@@ -125,24 +125,65 @@ function anwser(file, geometry, props, options) {
 	if (geometry) {
 		var filteredFeatures = []
 		features.forEach(function(feature) {
-			if (inquire.inquire(geometry,feature.geometry.coordinates)){
+			if (inquire.inquire(geometry, feature.geometry.coordinates)) {
 				filteredFeatures.push(feature)
 			}
 		})
 		features = filteredFeatures
 	}
 
+	// filter by properties
 	if (props) {
 		var filteredFeatures = []
 		features.forEach(function(feature) {
-			if (inquire.inquire(props,feature.properties)){
+			if (inquire.inquire(props, feature.properties)) {
 				filteredFeatures.push(feature)
 			}
 		})
 		features = filteredFeatures
 	}
 
-	return features
+	// apply options
+	var userOptions = {},
+		options = {}
+
+	h.parseUserOptions(userOptions, (opts || ""))
+	h.parseOptions(options, userOptions, config, file)
+
+	if (options.sortby) {
+		features.sort(h.propComparator(options));
+	}
+
+	if (options.limit) {
+		features = features.slice(options.page * options.limit, options.page * options.limit + parseInt(options.limit))
+	}
+
+	if(options.params!=-1){
+		if(!options.params){
+			features.forEach(function(feature){
+				feature.properties = {}
+			})
+		} else {
+			features.forEach(function(feature){
+				var newProps = {}
+				options.params.split("|").forEach(function(property){
+					newProps[property] = feature.properties[property]
+				})
+				feature.properties = newProps
+			})
+		}
+	}
+
+	var response = {
+		"type": "FeatureCollection",
+		"properties": {
+			"test": 20,
+			"test2": 20
+		},
+		"features": features
+	}
+
+	return response
 }
 
 function parseOptions(options) {

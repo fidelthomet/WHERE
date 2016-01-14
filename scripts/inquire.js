@@ -51,7 +51,7 @@ function inquire(query, obj) {
 		return false
 	}
 
-	var operator = query.match(/(<=|>=|<|>|!\$\$=|!=\$\$|!\$\$|\$\$=|=\$\$|!=\$|!\$=|\$=|=\$|\$\$|!\$|$|!==|!=|==|=)/)[0]
+	var operator = query.match(/(<=|>=|<|>|!\$\$=|!=\$\$|!\$\$|\$\$=|=\$\$|!=\$|!\$=|\$=|=\$|\$\$|!\$|\$|!==|!=|==|=)/)[0]
 	var a = h.getDeepObj(obj, query.split(operator)[0])
 	var b = query.split(operator)[1]
 	var result = false

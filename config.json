@@ -3,29 +3,30 @@
 	"docs": true,
 	"level": "features",
 	"options": {
-		"default": {
-			"limit": 20
-		},
-		"max": {
-
-		},
-		"min": {
-
-		}
+		"limit": 20,
+		"page": 0,
+		"sortby": -1,
+		"params": -1,
+		"desc": false,
+		"maxlimit": 100
 	},
 	"data_dir": "data/",
-
 	"files": {
 		"adressen": {
 			"path": "adressen.json",
-			"schedule": "* * 3 3 * *"
+			"schedule": "* * 3 3 * *",
+			"options":{}
 		},
 		"denkmalschutzobjekt": {
 			"path": "denkmalschutzobjekt.json",
-			"level": "features"
+			"level": "features",
+			"options":{}
 		},
 		"baumkataster": {
-			"url": "http://fidelio.local/baumkataster.json"
+			"url": "http://fidelio.local/baumkataster.json",
+			"options":{
+				"maxlimit": -1
+			}
 		}
 	}
 }
