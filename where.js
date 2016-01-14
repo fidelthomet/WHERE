@@ -1,60 +1,106 @@
 // config
-var pjson = require('./package.json')
-var config = require('./config.json')
+var pjson = require('./package.json'),
+	config = require('./config.json'),
+
 	// dependencies
-var restify = require('restify')
-var Lexer = require('lex')
-var Parser = require('./scripts/parser.js')
+	restify = require('restify'),
+	fs = require('fs'),
+	request = require('request'),
+	schedule = require('node-schedule'),
 
-var server = restify.createServer({
-	name: 'WHERE',
-	version: pjson.version
-})
+	// scripts
+	inquire = require('./scripts/inquire.js'),
+	h = require('./scripts/helper.js'),
 
+	// variables
+	files = {}
 
-// server.pre(restify.pre.sanitizePath());
+init()
 
-// Unsure if this is needed at some point
-// server.use(restify.acceptParser(server.acceptable))
-// server.use(restify.queryParser())
-// server.use(restify.bodyParser())
+// import files
+function init() {
+	var dataInitPromises = []
+	Object.keys(config.files).forEach(function(key) {
+		dataInitPromises.push(new Promise(function(resolve) {
+			update(resolve, key)
+		}))
 
-// define routes
-server.get('/q/:geojson', function(req, res) {
-	res.send(anwser(req.params.geojson))
-})
-
-server.get('/q/:geojson/:geometry', function(req, res) {
-	res.send(anwser(req.params.geojson, req.params.geometry))
-})
-
-server.get('/q/:geojson/:geometry/:props/', function(req, res) {
-	res.send(anwser(req.params.geojson, req.params.geometry, req.params.props))
-})
-
-server.get('/q/:geojson/:geometry/:props/:options', function(req, res) {
-	res.send(anwser(req.params.geojson, req.params.geometry, req.params.props, parseOptions(req.params.options)))
-})
-
-// send documentation (assuming it's not disabled in config.json)
-if (config.docs) {
-	server.get('/', function(req, res) {
-
-
-		var body = '<html><body>hello</body></html>';
-		res.writeHead(200, {
-			'Content-Length': Buffer.byteLength(body),
-			'Content-Type': 'text/html'
-		});
-		res.write(body);
-		res.end();
+		if (config.files[key].schedule) {
+			schedule.scheduleJob(config.files[key].schedule, function() {
+				update(null, key)
+			})
+		}
 	})
+	Promise.all(dataInitPromises).then(initServer)
 }
 
-// init server
-server.listen((process.env.PORT || config.port), function() {
-	console.log('%s listening at port %s', server.name, (process.env.PORT || config.port))
-})
+function update(resolve, key) {
+	if (config.files[key].path) {
+		fs.readFile(config.data_dir + config.files[key].path, 'utf8', function(err, data) {
+			if (err) throw err
+			files[key] = JSON.parse(data)
+			if (resolve)
+				resolve()
+		})
+	} else {
+		request(config.files[key].url, function(err, resp, body) {
+			if (err) throw err
+			files[key] = JSON.parse(body)
+			if (resolve)
+				resolve()
+		})
+	}
+}
+
+function initServer() {
+	console.log("bla")
+	var server = restify.createServer({
+		name: 'WHERE',
+		version: pjson.version
+	})
+
+	// server.pre(restify.pre.sanitizePath());
+
+	// Unsure if this is needed at some point
+	// server.use(restify.acceptParser(server.acceptable))
+	// server.use(restify.queryParser())
+	// server.use(restify.bodyParser())
+
+	// define routes
+	server.get('/q/:geojson', function(req, res) {
+		res.send(anwser(req.params.geojson))
+	})
+
+	server.get('/q/:geojson/:geometry', function(req, res) {
+		res.send(anwser(req.params.geojson, req.params.geometry))
+	})
+
+	server.get('/q/:geojson/:geometry/:props/', function(req, res) {
+		res.send(anwser(req.params.geojson, req.params.geometry, req.params.props))
+	})
+
+	server.get('/q/:geojson/:geometry/:props/:options', function(req, res) {
+		res.send(anwser(req.params.geojson, req.params.geometry, req.params.props, parseOptions(req.params.options)))
+	})
+
+	// send documentation (assuming it's not disabled in config.json)
+	if (config.docs) {
+		server.get('/', function(req, res) {
+			var body = '<html><body>hello</body></html>';
+			res.writeHead(200, {
+				'Content-Length': Buffer.byteLength(body),
+				'Content-Type': 'text/html'
+			});
+			res.write(body);
+			res.end();
+		})
+	}
+
+	// init server
+	server.listen((process.env.PORT || config.port), function() {
+		console.log('%s listening at port %s', server.name, (process.env.PORT || config.port))
+	})
+}
 
 function anwser(file, geometry, props, options) {
 	file = file == " " ? false : file
@@ -62,158 +108,43 @@ function anwser(file, geometry, props, options) {
 	props = props == " " ? false : props
 	options = options == " " ? false : options
 
-	console.log(geometry)
-	
-	return {
-		file: file
-		// geometry: geometry,
-		// props: props,
-		// options: options
-	}
-}
-
-function inquire(query, obj) {
-	
-	// handle parenthesis
-	while (query.match(/\(/)) {
-		innerQuery = ""
-		paraCount = 0
-
-		var paraLeft = query.search(/\(/)
-		var paraRight = 0
-
-		for (var i = paraLeft + 1; i < query.length; i++) {
-
-			if (query[i] == ")" && !paraCount) {
-				paraRight = i + 1
-				break
-			}
-
-			innerQuery += query[i]
-
-			if (query[i] == "(")
-				paraCount++
-				else if (query[i] == ")")
-					paraCount--
+	if (!file || !config.files[file]) {
+		return {
+			"code": "ResourceNotFound",
+			"message": "invalid file name"
 		}
-
-		var q0 = query.substring(0, paraLeft)
-		var q1 = inquire(innerQuery, obj)
-		var q2 = query.substring(paraRight)
-		
-		return inquire(q0 + q1 + q2, obj)
 	}
 
-	if (query.split(/&(.+)?/)[1]) {
-		return inquire(query.split(/&(.+)?/)[0], obj) && inquire(query.split(/&(.+)?/)[1], obj)
-	}
-	if (query.split(/\|(.+)?/)[1]) {
-		return inquire(query.split(/\|(.+)?/)[0], obj) || inquire(query.split(/\|(.+)?/)[1], obj)
-	}
-	if (query == "true") {
-		return true
-	}
-	if (query == "false") {
-		return false
+	if (!geometry && !props && !options) {
+		return files[file]
 	}
 
+	var features = h.getDeepObj(files, file + "." + (config.files[file].level || config.level))
 
-	var operator = query.match(/(<=|>=|<|>|!\$\$=|!=\$\$|!\$\$|\$\$=|=\$\$|!=\$|!\$=|\$=|=\$|\$\$|!\$|$|!==|!=|==|=)/)[0]
-	
-	var a = getDeepObj(obj, query.split(operator)[0])
-	
-	var b = query.split(operator)[1]
-
-	result = false;
-	
-	switch (operator) {
-		case "<=":
-			result = (a <= b)
-			break;
-		case ">=":
-			result = (a >= b)
-			break;
-		case "<":
-			result = (a < b)
-			break;
-		case ">":
-			result = (a > b)
-			break;
-		case "!$$":
-			result = (a.indexOf(b) == -1)
-			break;
-		case "!$":
-			result = ((a+"").toLowerCase().indexOf((b+"").toLowerCase()) == -1)
-			break;
-		case "$$":
-			result = (a.indexOf(b) != -1)
-			break;
-		case "$":
-			result = ((a+"").toLowerCase().indexOf((b+"").toLowerCase()) != -1)
-			break;
-		case "!==":
-			result = (a != b)
-			break;
-		case "!=":
-			result = ((a+"").toLowerCase() != (b+"").toLowerCase())
-			break;
-		case "==":
-			result = (a == b)
-			break;
-		case "=":
-			result = ((a+"").toLowerCase() == (b+"").toLowerCase())
-			break;
-		case "!$$=":
-			result = (a.indexOf(b) != 0)
-			break;
-		case "$$=":
-			result = (a.indexOf(b) == 0)
-			break;
-		case "!=$$":
-			result = (a.indexOf(b) != a.length - b.length)
-			break;
-		case "=$$":
-			result = (a.indexOf(b) == a.length - b.length)
-			break;
-		case "!$=":
-			result = ((a+"").toLowerCase().indexOf((b+"").toLowerCase()) != 0)
-			break;
-		case "$=":
-			result = ((a+"").toLowerCase().indexOf((b+"").toLowerCase()) == 0)
-			break;
-		case "!=$":
-			result = ((a+"").toLowerCase().indexOf((b+"").toLowerCase()) != a.length - b.length)
-			break;
-		case "=$":
-			result = ((a+"").toLowerCase().indexOf((b+"").toLowerCase()) == a.length - b.length)
-			break;
+	// this will be changed to allow more complex spatial queries
+	if (geometry) {
+		var filteredFeatures = []
+		features.forEach(function(feature) {
+			if (inquire.inquire(geometry,feature.geometry.coordinates)){
+				filteredFeatures.push(feature)
+			}
+		})
+		features = filteredFeatures
 	}
 
-	return result
-}
+	if (props) {
+		var filteredFeatures = []
+		features.forEach(function(feature) {
+			if (inquire.inquire(props,feature.properties)){
+				filteredFeatures.push(feature)
+			}
+		})
+		features = filteredFeatures
+	}
 
-function parseProps(props) {
-	return props
-}
-
-function parseParenthesis(query) {
-	//look for the indexes of all opening parenthesis, then look for all the closing ones
+	return features
 }
 
 function parseOptions(options) {
 	return options
-}
-
-function getDeepObj(obj, path) {
-	var splitPath = path.split(/\.(.+)?/)
-
-	if (typeof obj[splitPath[0]] === 'undefined' || obj[splitPath[0]] === null)
-		obj[splitPath[0]] = {}
-
-	var deepObj = obj[splitPath[0]]
-
-	if (typeof splitPath[1] === 'undefined')
-		return deepObj
-	else
-		return getDeepObj(deepObj, splitPath[1])
 }

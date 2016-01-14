@@ -1,10 +1,11 @@
 {
 	"port": 65432,
 	"docs": true,
+	"level": "features",
 	"options": {
 		"default": {
-
-			},
+			"limit": 20
+		},
 		"max": {
 
 		},
@@ -12,9 +13,19 @@
 
 		}
 	},
+	"data_dir": "data/",
+
 	"files": {
 		"adressen": {
-			
+			"path": "adressen.json",
+			"schedule": "* * 3 3 * *"
+		},
+		"denkmalschutzobjekt": {
+			"path": "denkmalschutzobjekt.json",
+			"level": "features"
+		},
+		"baumkataster": {
+			"url": "http://fidelio.local/baumkataster.json"
 		}
 	}
 }
