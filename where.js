@@ -164,6 +164,8 @@ function respond(file, geometry, props, opts) {
 		features.sort(h.propComparator(options));
 	}
 
+	var total = features.length 
+
 	if (options.limit) {
 		features = features.slice(options.page * options.limit, options.page * options.limit + parseInt(options.limit))
 	}
@@ -187,8 +189,9 @@ function respond(file, geometry, props, opts) {
 	var response = {
 		"type": "FeatureCollection",
 		"properties": {
-			"test": 20,
-			"test2": 20
+			"results": total,
+			"limit": options.limit,
+			"page": options.page
 		},
 		"features": features
 	}
