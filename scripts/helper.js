@@ -38,8 +38,6 @@ function parseUserOptions(options, option) {
 }
 
 function parseOptions(options, userOptions, config, file) {
-	console.log(config.files[file])
-	console.log(userOptions.limit)
 	options.limit = (userOptions.limit || config.files[file].options.limit || config.options.limit)
 	var maxlimit = config.files[file].options.limit || config.options.maxlimit
 	if (options.limit > maxlimit && maxlimit != -1) {

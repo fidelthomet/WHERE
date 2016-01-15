@@ -53,7 +53,7 @@ function update(resolve, key) {
 }
 
 function initServer() {
-	console.log("bla")
+	
 	var server = restify.createServer({
 		name: 'WHERE',
 		version: pjson.version
@@ -125,7 +125,7 @@ function respond(file, geometry, props, opts) {
 	if (geometry) {
 		var filteredFeatures = []
 		features.forEach(function(feature) {
-			if (inquire.inquire(geometry, feature.geometry.coordinates)) {
+			if (inquire.inquireGeometry(geometry, feature)) {
 				filteredFeatures.push(feature)
 			}
 		})
@@ -136,7 +136,7 @@ function respond(file, geometry, props, opts) {
 	if (props) {
 		var filteredFeatures = []
 		features.forEach(function(feature) {
-			if (inquire.inquire(props, feature.properties)) {
+			if (inquire.inquireProperties(props, feature.properties)) {
 				filteredFeatures.push(feature)
 			}
 		})

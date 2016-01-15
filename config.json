@@ -27,6 +27,20 @@
 			"options":{
 				"maxlimit": -1
 			}
+		},
+		"statistische_zonen": {
+			"path": "statistische_zonen.json",
+			"options": {
+				"maxlimit": -1,
+				"limit": false
+			}
+		},
+		"fussweg": {
+			"path": "fussweg.json",
+			"options": {
+				"maxlimit": -1,
+				"limit": false
+			}
 		}
 	}
 }
