@@ -43,7 +43,7 @@ function parseOptions(options, userOptions, config, file) {
 	if (options.limit > maxlimit && maxlimit != -1) {
 		options.limit = maxlimit
 	}
-	options.page = (userOptions.page + 1 || config.files[file].options.page + 1 || config.options.page + 1) - 1
+	options.page = (+userOptions.page + 1 || +config.files[file].options.page + 1 || +config.options.page + 1) - 1
 	options.sortby = (userOptions.sortby || config.files[file].options.sortby || config.options.sortby)
 	if (options.sortby == -1) {
 		options.sortby = false
