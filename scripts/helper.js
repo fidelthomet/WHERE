@@ -50,6 +50,7 @@ function parseOptions(options, userOptions, config, file) {
 	}
 	options.params = (userOptions.params || config.files[file].options.params || config.options.params)
 	options.desc = (userOptions.desc || config.files[file].options.desc || config.options.desc)
+	options.dist = (userOptions.dist || config.files[file].options.dist || config.options.dist)
 }
 
 function propComparator(options) {

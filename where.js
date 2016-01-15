@@ -7,6 +7,7 @@ var pjson = require('./package.json'),
 	fs = require('fs'),
 	request = require('request'),
 	schedule = require('node-schedule'),
+	turf = require('turf'),
 
 	// scripts
 	inquire = require('./scripts/inquire.js'),
@@ -149,6 +150,15 @@ function respond(file, geometry, props, opts) {
 
 	h.parseUserOptions(userOptions, (opts || ""))
 	h.parseOptions(options, userOptions, config, file)
+
+	if (options.dist){
+		var user = turf.point(options.dist.split(","))
+		features.forEach(function(feature){
+			if(feature.geometry.type=="Point"){
+				feature.properties.dist = turf.distance(feature,user)
+			}
+		})
+	}
 
 	if (options.sortby) {
 		features.sort(h.propComparator(options));
