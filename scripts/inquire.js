@@ -193,6 +193,7 @@ function inquireGeometry(query, obj) {
 		feature = turf.linestring(arr2)
 	} else {
 		type = "Polygon"
+		arr2.push(arr2[0])
 		feature = turf.polygon([arr2])
 	}
 

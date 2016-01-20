@@ -48,7 +48,7 @@ function parseOptions(options, userOptions, config, file) {
 	if (options.sortby == -1) {
 		options.sortby = false
 	}
-	options.params = (userOptions.params || config.files[file].options.params || config.options.params)
+	options.properties = (userOptions.properties || config.files[file].options.properties || config.options.properties)
 	options.desc = (userOptions.desc || config.files[file].options.desc || config.options.desc)
 	options.dist = (userOptions.dist || config.files[file].options.dist || config.options.dist)
 }

@@ -12,6 +12,7 @@ var pjson = require('./package.json'),
 	// scripts
 	inquire = require('./scripts/inquire.js'),
 	h = require('./scripts/helper.js'),
+	docs = require('./scripts/docs.js'),
 
 	// variables
 	files = {}
@@ -87,7 +88,7 @@ function initServer() {
 	// send documentation (assuming it's not disabled in config.json)
 	if (config.docs) {
 		server.get('/', function(req, res) {
-			var body = '<html><body>hello</body></html>';
+			var body = docs.docs(config, files);
 			res.writeHead(200, {
 				'Content-Length': Buffer.byteLength(body),
 				'Content-Type': 'text/html'
@@ -170,15 +171,15 @@ function respond(file, geometry, props, opts) {
 		features = features.slice(options.page * options.limit, options.page * options.limit + parseInt(options.limit))
 	}
 
-	if(options.params!=-1){
-		if(!options.params){
+	if(options.properties!=-1){
+		if(!options.properties){
 			features.forEach(function(feature){
 				feature.properties = {}
 			})
 		} else {
 			features.forEach(function(feature){
 				var newProps = {}
-				options.params.split("|").forEach(function(property){
+				options.properties.split("|").forEach(function(property){
 					newProps[property] = feature.properties[property]
 				})
 				feature.properties = newProps
