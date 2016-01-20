@@ -38,7 +38,7 @@
 	"data_dir": "data/",
 	"files": {
 		"adressen": {
-			"path": "adressen.json",
+			"url": "https://data.stadt-zuerich.ch/storage/f/adressen/adressen.json",
 			"schedule": "* * 3 3 * *",
 			"options": {}
 		},
