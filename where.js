@@ -69,19 +69,19 @@ function initServer() {
 	// server.use(restify.bodyParser())
 
 	// define routes
-	server.get('/q/:geojson', function(req, res) {
+	server.get('/:geojson', function(req, res) {
 		res.send(respond(req.params.geojson))
 	})
 
-	server.get('/q/:geojson/:geometry', function(req, res) {
+	server.get('/:geojson/:geometry', function(req, res) {
 		res.send(respond(req.params.geojson, req.params.geometry))
 	})
 
-	server.get('/q/:geojson/:geometry/:props/', function(req, res) {
+	server.get('/:geojson/:geometry/:props/', function(req, res) {
 		res.send(respond(req.params.geojson, req.params.geometry, req.params.props))
 	})
 
-	server.get('/q/:geojson/:geometry/:props/:options', function(req, res) {
+	server.get('/:geojson/:geometry/:props/:options', function(req, res) {
 		res.send(respond(req.params.geojson, req.params.geometry, req.params.props, parseOptions(req.params.options)))
 	})
 
