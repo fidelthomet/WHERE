@@ -43,25 +43,25 @@
 			"options": {}
 		},
 		"denkmalschutzobjekt": {
-			"path": "denkmalschutzobjekt.json",
+			"url": "https://data.stadt-zuerich.ch/storage/f/denkmalschutzobjekt/denkmalschutzobjekt.json",
 			"level": "features",
 			"options": {}
 		},
 		"baumkataster": {
-			"url": "http://fidelio.local/baumkataster.json",
+			"url": "https://data.stadt-zuerich.ch/storage/f/baumkataster/baumkataster.json",
 			"options": {
 				"maxlimit": -1
 			}
 		},
 		"statistische_zonen": {
-			"path": "statistische_zonen.json",
+			"url": "https://data.stadt-zuerich.ch/storage/f/stat_zonen/statistische_zonen.json",
 			"options": {
 				"maxlimit": -1,
 				"limit": false
 			}
 		},
 		"fussweg": {
-			"path": "fussweg.json",
+			"url": "https://data.stadt-zuerich.ch/storage/f/fussweg/fussweg.json",
 			"options": {
 				"maxlimit": -1,
 				"limit": false
