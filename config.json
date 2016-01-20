@@ -23,6 +23,9 @@
 	}, {
 		"url": "statistische_zonen/8.542213439941406,47.38789042338135;8.532943725585938,47.375685893433115",
 		"description": "returns statistical zones intersecting with given lines"
+	}, {
+		"url": "baumkataster/ / /limit=5&sortby=dist&dist=8.5302425707556,47.3759182540103",
+		"description": "returns the five closest trees to specified point"
 	}],
 	"options": {
 		"limit": 20,

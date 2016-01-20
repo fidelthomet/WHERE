@@ -14,6 +14,10 @@ module.exports.propComparator = function(options) {
 	return propComparator(options)
 }
 
+module.exports.flattenObject = function(obj, flatten) {
+	return flattenObject(obj, flatten)
+}
+
 function getDeepObj(obj, path) {
 	var splitPath = path.split(/\.(.+)?/)
 
@@ -29,7 +33,7 @@ function getDeepObj(obj, path) {
 }
 
 function parseUserOptions(options, option) {
-	if (option.indexOf("&")==-1) {
+	if (option.indexOf("&") == -1) {
 		options[option.split(/=(.+)?/)[0]] = option.split(/=(.+)?/)[1]
 	} else {
 		parseUserOptions(options, option.split(/&(.+)?/)[0])
@@ -56,10 +60,30 @@ function parseOptions(options, userOptions, config, file) {
 function propComparator(options) {
 	return function(a, b) {
 		var dir = options.desc ? -1 : 1
-		a = getDeepObj(a, "properties."+options.sortby)
-		b = getDeepObj(b, "properties."+options.sortby)
+		a = getDeepObj(a, "properties." + options.sortby)
+		b = getDeepObj(b, "properties." + options.sortby)
 		if (a == b)
 			return 0
 		return a < b ? -1 * dir : 1 * dir
 	}
+}
+
+function flattenObject(obj, flatten) {
+	var toReturn = {}
+
+	for (var i in obj) {
+		if (!obj.hasOwnProperty(i)) continue
+
+		if ((typeof obj[i]) == 'object' && !Array.isArray(obj[i])) {
+			var flatObject = flattenObject(obj[i])
+			for (var x in flatObject) {
+				if (!flatObject.hasOwnProperty(x)) continue
+
+				flatten == "append" ? toReturn[i + '.' + x] = flatObject[x] : toReturn[x] = flatObject[x]
+			}
+		} else {
+			toReturn[i] = obj[i]
+		}
+	}
+	return toReturn
 }
