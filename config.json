@@ -1,7 +1,7 @@
 {
 	"title": "WHERE? API Documentation",
 	"description": "This API allows to query selected GeoJSON-files from [Open Data Zürich](http://data.stadt-zuerich.ch).",
-	"hostname": "http://localhost:65432/q",
+	"hostname": "https://where-demo-ogd.herokuapp.com",
 	"port": 65432,
 	"docs": true,
 	"level": "features",
