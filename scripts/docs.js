@@ -21,7 +21,7 @@ function docs(config, files) {
 	})
 	body += md.render('## Query Examples')
 	config.examples.forEach(function(example) {
-		body += md.render('- [' + config.hostname + "/" + example.url + "](" + (config.hostname + "/" + example.url).replace(/ /g, "%20") + ")" + "\n\n  " + example.description)
+		body += md.render('- [' + config.hostname + "/q/" + example.url + "](" + (config.hostname + "/q/" + example.url).replace(/ /g, "%20") + ")" + "\n\n  " + example.description)
 	})
 	body += md.render('## Spatial Querying')
 	body += md.render('The [spatial query]-paramter takes points `long,lat`, lines `long-1,lat-1;long-2,lat-2` and polygons `long-1,lat-1;long-2,lat-2; … long-n,lat-n`. Spatial queries are supported for the GeoJSON-featuretypes Point, Line and Polygon.\n|feature-type|point-query|line-query|polygon-query|\n|--|--|--|--|\n|**point**|points equal each other|-|point is inside polygon|\n|**line**|-|lines intersect each other|line is inside or intersects polygon|\n|**polygon**|polygon encloses point|polygon encloses or intersects line|polygons intersect each other|\n')
