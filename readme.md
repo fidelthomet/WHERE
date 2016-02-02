@@ -28,7 +28,7 @@ To test the application run this command:
 Open `config.json` to set up *Where?* according to your needs.
 
 | Property | Description |
-|--|--|
+| --- | --- |
 | `port` | Sets server port (may be overwritten by environment variable `PORT`). Default: `65432` |
 | `data_dir` | directory for local GeoJSON-files. Default: `data/` |
 | `level` | path to FeatureCollection in GeoJSON file structure (may be overwritten in file specific properties). Default: `features` |
