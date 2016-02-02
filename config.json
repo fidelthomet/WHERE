@@ -64,7 +64,7 @@
 			"url": "https://data.stadt-zuerich.ch/storage/f/fussweg/fussweg.json",
 			"options": {
 				"maxlimit": -1,
-				"limit": false
+				"limit": 1
 			}
 		}
 	}
