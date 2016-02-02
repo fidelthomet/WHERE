@@ -39,22 +39,25 @@
 	"files": {
 		"adressen": {
 			"url": "https://data.stadt-zuerich.ch/storage/f/adressen/adressen.json",
-			"schedule": "* * 3 3 * *",
+			"schedule": "* * 3 * * 3",
 			"options": {}
 		},
 		"denkmalschutzobjekt": {
 			"url": "https://data.stadt-zuerich.ch/storage/f/denkmalschutzobjekt/denkmalschutzobjekt.json",
 			"level": "features",
+			"schedule": "* 5 3 * * 3",
 			"options": {}
 		},
 		"baumkataster": {
 			"url": "https://data.stadt-zuerich.ch/storage/f/baumkataster/baumkataster.json",
+			"schedule": "* 10 3 * * 3",
 			"options": {
-				"maxlimit": -1
+				"maxlimit": -1,
 			}
 		},
 		"statistische_zonen": {
 			"url": "https://data.stadt-zuerich.ch/storage/f/stat_zonen/statistische_zonen.json",
+			"schedule": "* 15 3 * * 3",
 			"options": {
 				"maxlimit": -1,
 				"limit": false
@@ -62,6 +65,7 @@
 		},
 		"fussweg": {
 			"url": "https://data.stadt-zuerich.ch/storage/f/fussweg/fussweg.json",
+			"schedule": "* 20 3 * * 3",
 			"options": {
 				"maxlimit": -1,
 				"limit": 1
