@@ -35,10 +35,11 @@
 			"url": "https://data.stadt-zuerich.ch/storage/f/fussweg/fussweg.json",
 			"schedule": "* 20 3 1 * *",
 			"options": {
-				"maxlimit": -1,
+				"maxlimit": -1
 			}
 		}
 	},
+	
 	"docs": true,
 	"title": "WHERE? API Documentation",
 	"description": "This API allows to query selected GeoJSON-files from [Open Data Zürich](http://data.stadt-zuerich.ch).",
@@ -64,5 +65,5 @@
 	}, {
 		"url": "baumkataster/ / /limit=5&sortby=dist&dist=8.5302425707556,47.3759182540103",
 		"description": "returns the five closest trees to specified point"
-	}],
+	}]
 }
