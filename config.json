@@ -39,7 +39,7 @@
 			}
 		}
 	},
-	
+
 	"docs": true,
 	"title": "WHERE? API Documentation",
 	"description": "This API allows to query selected GeoJSON-files from [Open Data Zürich](http://data.stadt-zuerich.ch).",
@@ -49,7 +49,7 @@
 		"description": "returns the unmodified adressen.json"
 	}, {
 		"url": "baumkataster/ /Pflanzjahr>=1920&Pflanzjahr<=1925",
-		"description": "returns trees which have been build planted 1920 and 1925"
+		"description": "returns trees which have been planted between 1920 and 1925"
 	}, {
 		"url": "baumkataster/8.526248931884766,47.363245989634336;8.526248931884766,47.37649961666246;8.547019958496094,47.37649961666246;8.547019958496094,47.363245989634336/Baumgattung=Sophora/limit=-1",
 		"description": "returns all trees within given polygon and with 'Baumgattung' Sophora"
