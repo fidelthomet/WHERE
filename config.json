@@ -52,7 +52,7 @@
 			"url": "https://data.stadt-zuerich.ch/storage/f/baumkataster/baumkataster.json",
 			"schedule": "* 10 3 * * 3",
 			"options": {
-				"maxlimit": -1,
+				"maxlimit": -1
 			}
 		},
 		"statistische_zonen": {
