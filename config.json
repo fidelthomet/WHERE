@@ -4,23 +4,17 @@
 	
 	"level": "features",
 	"options": {
-		"limit": 20,
+		"limit": 50,
 		"page": 0,
 		"sortby": -1,
 		"properties": -1,
 		"desc": false,
-		"maxlimit": 100
+		"maxlimit": 200
 	},
 	"files": {
 		"adressen": {
 			"url": "https://data.stadt-zuerich.ch/storage/f/adressen/adressen.json",
 			"schedule": "* * 3 * * 3",
-			"options": {}
-		},
-		"denkmalschutzobjekt": {
-			"url": "https://data.stadt-zuerich.ch/storage/f/denkmalschutzobjekt/denkmalschutzobjekt.json",
-			"level": "features",
-			"schedule": "* 5 3 * * 3",
 			"options": {}
 		},
 		"baumkataster": {
@@ -32,18 +26,16 @@
 		},
 		"statistische_zonen": {
 			"url": "https://data.stadt-zuerich.ch/storage/f/stat_zonen/statistische_zonen.json",
-			"schedule": "* 15 3 * * 3",
+			"schedule": "* 15 3 1 * *",
 			"options": {
-				"maxlimit": -1,
-				"limit": false
+				"limit": 200
 			}
 		},
 		"fussweg": {
 			"url": "https://data.stadt-zuerich.ch/storage/f/fussweg/fussweg.json",
-			"schedule": "* 20 3 * * 3",
+			"schedule": "* 20 3 1 * *",
 			"options": {
 				"maxlimit": -1,
-				"limit": 1
 			}
 		}
 	},
@@ -55,8 +47,8 @@
 		"url": "adressen",
 		"description": "returns the unmodified adressen.json"
 	}, {
-		"url": "denkmalschutzobjekt/ /Baujahr>=1920&Baujahr<=1925",
-		"description": "returns landmarks form denkmalschutzobjekt.json which have been build between 1920 and 1925"
+		"url": "baumkataster/ /Pflanzjahr>=1920&Pflanzjahr<=1925",
+		"description": "returns trees which have been build planted 1920 and 1925"
 	}, {
 		"url": "baumkataster/8.526248931884766,47.363245989634336;8.526248931884766,47.37649961666246;8.547019958496094,47.37649961666246;8.547019958496094,47.363245989634336/Baumgattung=Sophora/limit=-1",
 		"description": "returns all trees within given polygon and with 'Baumgattung' Sophora"
