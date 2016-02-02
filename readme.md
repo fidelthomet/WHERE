@@ -56,6 +56,7 @@ Open `config.json` to set up *Where?* according to your needs.
 
 ## Deploy on Heroku
 Deployment on Heroku is done in a few steps:
+
 1. Fork your own copy of this repository to your account
 2. Modify `config.json` to fit your needs
 3. Sign in to [Heroku](https://www.heroku.com)
