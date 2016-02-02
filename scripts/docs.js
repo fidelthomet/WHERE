@@ -45,23 +45,16 @@ function docs(config, files) {
 		
 		// body += md.render(files[key].description)
 		var optionsTable = ""
-		console.log(1)
 		Object.keys(config.files[key].options).forEach(function(option) {
-			console.log("huhu")
 			optionsTable += "\n|" + option + "|`" + config.files[key].options[option] + "`|"
 		})
-		console.log(2)
 		if (optionsTable) {
-			console.log(2.5)
 			optionsTable = "|option|default|\n|--|--|" + optionsTable
 			body += md.render("#### dataset specific options")
 			body += md.render(optionsTable)
 		}
-		console.log(3)
 		body += md.render("#### available properties")
-		console.log(4)
 		var paramsTable = "|parameter|example|\n|--|--|"
-		console.log(config.files[key].level)
 		var tableStructure = h.flattenObject(h.getDeepObj(files, key + "." + (config.files[key].level||config.level))[0].properties, "append")
 		Object.keys(tableStructure).forEach(function(param) {
 			paramsTable += "\n|`" + param + "`|`" + (tableStructure[param]||"-") + "`|"
