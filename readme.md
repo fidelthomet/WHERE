@@ -20,8 +20,11 @@ These instructions describe how to run *Where?* on your local machine for develo
 
 ### Installing
 Grab a copy of *Where?*, open your Terminal (or other Command Line Interface), `cd` into the directory and install the dependencies using npm:
+
 	npm install
+
 To test the application run this command:
+
 	node where.js
 
 ## Configuration
