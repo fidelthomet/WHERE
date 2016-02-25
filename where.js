@@ -165,7 +165,6 @@ function respond(file, geometry, props, opts) {
 		})
 	}
 	
-	var start = (new Date).getTime();
 	if (options.sortby) {
 		// filtered.sort(h.propComparator(options));
 
@@ -174,8 +173,7 @@ function respond(file, geometry, props, opts) {
 		
 		// filtered = sort(filtered,options.sortby)
 	}
-	console.log((new Date).getTime()-start)
-
+	
 	var total = filtered.length
 
 	if (options.limit) {
