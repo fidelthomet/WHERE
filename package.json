@@ -7,10 +7,11 @@
     "start": "node where.js"
   },
   "dependencies": {
-    "restify": "4.0.3",
-    "request": "2.67.0",
-    "node-schedule": "0.6.0",
     "markdown-it": "5.1.0",
+    "node-schedule": "0.6.0",
+    "request": "2.67.0",
+    "restify": "4.0.3",
+    "timsort": "^0.2.1",
     "turf": "2.0.2"
   },
   "engines": {

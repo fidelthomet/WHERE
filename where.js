@@ -13,6 +13,8 @@ var pjson = require('./package.json'),
 	inquire = require('./scripts/inquire.js'),
 	h = require('./scripts/helper.js'),
 	docs = require('./scripts/docs.js'),
+	TimSort = require('timsort'),
+
 
 	// variables
 	files = {}
@@ -55,7 +57,7 @@ function update(resolve, key) {
 }
 
 function initServer() {
-	
+
 	var server = restify.createServer({
 		name: 'WHERE',
 		version: pjson.version
@@ -67,7 +69,7 @@ function initServer() {
 	// server.use(restify.acceptParser(server.acceptable))
 	// server.use(restify.queryParser())
 	// server.use(restify.bodyParser())
-	
+
 	server.use(restify.CORS());
 
 	// define routes
@@ -125,27 +127,25 @@ function respond(file, geometry, props, opts) {
 
 	var features = h.getDeepObj(files, file + "." + (config.files[file].level || config.level))
 
-	// this will be changed to allow more complex spatial queries
-	if (geometry) {
-		var filteredFeatures = []
-		features.forEach(function(feature) {
-			if (inquire.inquireGeometry(geometry, feature)) {
-				filteredFeatures.push(feature)
-			}
-		})
-		features = filteredFeatures
-	}
+	var filtered = []
+		// this will be changed to allow more complex spatial queries
 
-	// filter by properties
-	if (props) {
-		var filteredFeatures = []
-		features.forEach(function(feature) {
-			if (inquire.inquireProperties(props, feature.properties)) {
-				filteredFeatures.push(feature)
-			}
-		})
-		features = filteredFeatures
-	}
+	features.forEach(function(feature) {
+		delete(feature.dist)
+
+		if (geometry && props) {
+			if (inquire.inquireGeometry(geometry, feature) && inquire.inquireProperties(props, feature.properties))
+				filtered.push(feature)
+		} else if (geometry) {
+			if (inquire.inquireGeometry(geometry, feature))
+				filtered.push(feature)
+		} else if (props) {
+			if (inquire.inquireProperties(props, feature.properties))
+				filtered.push(feature)
+		} else {
+			filtered.push(feature)
+		}
+	})
 
 	// apply options
 	var userOptions = {},
@@ -154,34 +154,43 @@ function respond(file, geometry, props, opts) {
 	h.parseUserOptions(userOptions, (opts || ""))
 	h.parseOptions(options, userOptions, config, file)
 
-	if (options.dist){
+	
+	if (options.dist) {
 		var user = turf.point(options.dist.split(","))
-		features.forEach(function(feature){
-			if(feature.geometry.type=="Point"){
-				feature.properties.dist = turf.distance(feature,user)
+		filtered.forEach(function(feature) {
+			if (feature.geometry.type == "Point") {
+				// feature.properties.dist = getDistanceFromLatLonInM(feature.geometry.coordinates[0], feature.geometry.coordinates[1], user.geometry.coordinates[0], user.geometry.coordinates[1])
+				feature.properties.dist = turf.distance(feature, user)
 			}
 		})
 	}
-
+	
+	var start = (new Date).getTime();
 	if (options.sortby) {
-		features.sort(h.propComparator(options));
-	}
+		// filtered.sort(h.propComparator(options));
 
-	var total = features.length 
+		TimSort.sort(filtered, h.propComparator(options))
+		// 
+		
+		// filtered = sort(filtered,options.sortby)
+	}
+	console.log((new Date).getTime()-start)
+
+	var total = filtered.length
 
 	if (options.limit) {
-		features = features.slice(options.page * options.limit, options.page * options.limit + parseInt(options.limit))
+		filtered = filtered.slice(options.page * options.limit, options.page * options.limit + parseInt(options.limit))
 	}
 
-	if(options.properties!=-1){
-		if(!options.properties){
-			features.forEach(function(feature){
+	if (options.properties != -1) {
+		if (!options.properties) {
+			filtered.forEach(function(feature) {
 				feature.properties = {}
 			})
 		} else {
-			features.forEach(function(feature){
+			filtered.forEach(function(feature) {
 				var newProps = {}
-				options.properties.split("|").forEach(function(property){
+				options.properties.split("|").forEach(function(property) {
 					newProps[property] = feature.properties[property]
 				})
 				feature.properties = newProps
@@ -196,7 +205,7 @@ function respond(file, geometry, props, opts) {
 			"limit": options.limit,
 			"page": options.page
 		},
-		"features": features
+		"features": filtered
 	}
 
 	return response
@@ -204,4 +213,23 @@ function respond(file, geometry, props, opts) {
 
 function parseOptions(options) {
 	return options
+}
+
+function getDistanceFromLatLonInM(lon1, lat1, lon2, lat2) {
+	//based on http://stackoverflow.com/questions/18883601/function-to-calculate-distance-between-two-coordinates-shows-wrong
+
+	var R = 6371; // Radius of the earth in km
+	var dLat = deg2rad(lat2 - lat1); // deg2rad below
+	var dLon = deg2rad(lon2 - lon1);
+	var a =
+		Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+		Math.cos(deg2rad(lat1)) * Math.cos(deg2rad(lat2)) *
+		Math.sin(dLon / 2) * Math.sin(dLon / 2);
+	var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+	var d = R * c * 1000; // Distance in m
+	return Math.round(d);
+}
+
+function deg2rad(deg) {
+	return deg * (Math.PI / 180)
 }
