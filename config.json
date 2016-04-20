@@ -14,26 +14,26 @@
 	"files": {
 		"adressen": {
 			"url": "https://data.stadt-zuerich.ch/storage/f/adressen/adressen.json",
-			"schedule": "* * 3 * * 3",
+			"schedule": "0 * 3 * * 3",
 			"options": {}
 		},
 		"baumkataster": {
 			"url": "https://data.stadt-zuerich.ch/storage/f/baumkataster/baumkataster.json",
-			"schedule": "* 10 3 * * 3",
+			"schedule": "0 10 3 * * 3",
 			"options": {
 				"maxlimit": -1
 			}
 		},
 		"statistische_zonen": {
 			"url": "https://data.stadt-zuerich.ch/storage/f/stat_zonen/statistische_zonen.json",
-			"schedule": "* 15 3 1 * *",
+			"schedule": "0 15 3 1 * *",
 			"options": {
 				"limit": 200
 			}
 		},
 		"fussweg": {
 			"url": "https://data.stadt-zuerich.ch/storage/f/fussweg/fussweg.json",
-			"schedule": "* 20 3 1 * *",
+			"schedule": "0 20 3 1 * *",
 			"options": {
 				"maxlimit": -1
 			}
