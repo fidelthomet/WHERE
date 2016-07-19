@@ -1,3 +1,7 @@
+# Deprecated
+
+Use of this repository is deprecated. Please use the better and faster [Where2](https://github.com/fidelthomet/where2) instead. 
+
 # WHERE? GeoJSON -> API
 
 *Where?* turns static GeoJSON files into queryable APIs. This is particularly useful for filtering huge datasets by location and/or properties.
